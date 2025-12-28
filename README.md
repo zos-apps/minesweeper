@@ -1,54 +1,81 @@
-# 💣 Minesweeper
+# Minesweeper
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/zos-apps/minesweeper/releases)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-online-purple.svg)](https://zos-apps.github.io/minesweeper)
+💣 Classic puzzle game where you clear mines from a grid.
 
-> Classic mine-sweeping puzzle game
+[![CI](https://github.com/zos-apps/minesweeper/actions/workflows/ci.yml/badge.svg)](https://github.com/zos-apps/minesweeper/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@zos-apps/minesweeper.svg)](https://www.npmjs.com/package/@zos-apps/minesweeper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**[Documentation](https://zos-apps.github.io/minesweeper)** • **[App Store](https://zos-apps.github.io/app-store)** • **[All Apps](https://github.com/zos-apps)**
+## About
 
-## Installation
-
-```bash
-npm install github:zos-apps/minesweeper
-```
-
-Or install via the [zOS App Store](https://zos-apps.github.io/app-store).
-
-## Usage
-
-```tsx
-import Minesweeper from '@zos-apps/minesweeper';
-
-function App() {
-  return <Minesweeper />;
-}
-```
+Classic puzzle game where you clear mines from a grid.
 
 ## Features
 
-- Native zOS window integration
-- Dark mode support
+- Three difficulty levels
+- Timer
+- Flag mode
+- Best times
 
-- Context menu actions
-- Menu bar integration
+## Installation
 
-## Category
+### From App Store
+Open the **App Store** in zOS and search for "Minesweeper".
 
-**Games**
+### Via npm
+```bash
+npm install @zos-apps/minesweeper
+```
 
-## Permissions
+## Usage
 
-- `storage.local`
+- Click to reveal
+- Right-click to flag
+- Numbers show adjacent mines
 
-## Links
+## Keyboard Shortcuts
 
-- [Documentation](https://zos-apps.github.io/minesweeper)
-- [GitHub Repository](https://github.com/zos-apps/minesweeper)
-- [Report Issues](https://github.com/zos-apps/minesweeper/issues)
-- [All zOS Apps](https://github.com/zos-apps)
+| Shortcut | Action |
+|----------|--------|
+| `Click` | Reveal |
+| `Right-click` | Flag |
+| `N` | New game |
+
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## Documentation
+
+- [User Guide](https://zos-apps.github.io/minesweeper)
+- [API Reference](https://zos-apps.github.io/minesweeper/api)
+- [Changelog](https://github.com/zos-apps/minesweeper/releases)
+
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](https://github.com/zos-apps/minesweeper/blob/main/CONTRIBUTING.md) first.
 
 ## License
 
 MIT © [Hanzo AI](https://hanzo.ai)
+
+---
+
+<p align="center">
+  <a href="https://hanzo.ai">
+    <img src="https://hanzo.ai/logo.svg" alt="Hanzo AI" width="100">
+  </a>
+</p>
+<p align="center">
+  Built with ❤️ by <a href="https://hanzo.ai">Hanzo AI</a>
+</p>

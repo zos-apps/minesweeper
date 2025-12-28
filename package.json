@@ -20,7 +20,26 @@
         "height": 500
       },
       "resizable": true
-    }
+    },
+    "about": "Classic puzzle game where you clear mines from a grid.",
+    "help": [
+      "Click to reveal",
+      "Right-click to flag",
+      "Numbers show adjacent mines"
+    ],
+    "docs": "https://zos-apps.github.io/minesweeper",
+    "site": "https://github.com/zos-apps/minesweeper",
+    "shortcuts": [
+      "Click Reveal",
+      "Right-click Flag",
+      "N New game"
+    ],
+    "features": [
+      "Three difficulty levels",
+      "Timer",
+      "Flag mode",
+      "Best times"
+    ]
   },
   "scripts": {
     "build": "tsup",
@@ -53,5 +72,13 @@
     "minesweeper",
     "macos",
     "desktop"
-  ]
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/zos-apps"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
