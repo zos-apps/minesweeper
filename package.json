@@ -1,5 +1,5 @@
 {
-  "name": "@anthropic/minesweeper",
+  "name": "@zos-apps/minesweeper",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,9 +11,14 @@
     "icon": "💣",
     "category": "games",
     "description": "Classic mine-sweeping puzzle game",
-    "permissions": ["storage.local"],
+    "permissions": [
+      "storage.local"
+    ],
     "window": {
-      "defaultSize": { "width": 400, "height": 500 },
+      "defaultSize": {
+        "width": 400,
+        "height": 500
+      },
       "resizable": true
     }
   },
@@ -30,5 +35,23 @@
     "@types/react-dom": "^18.3.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
-  }
+  },
+  "description": "Classic mine-sweeping puzzle game",
+  "homepage": "https://zos-apps.github.io/minesweeper",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zos-apps/minesweeper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zos-apps/minesweeper/issues"
+  },
+  "author": "Hanzo AI",
+  "license": "MIT",
+  "keywords": [
+    "zos",
+    "app",
+    "minesweeper",
+    "macos",
+    "desktop"
+  ]
 }
