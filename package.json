@@ -39,7 +39,27 @@
       "Timer",
       "Flag mode",
       "Best times"
-    ]
+    ],
+    "screenshots": {
+      "hero": "screenshots/hero.png",
+      "images": [
+        "screenshots/1-main.png",
+        "screenshots/2-feature.png"
+      ]
+    },
+    "downloads": {
+      "web": "https://zos-apps.github.io/minesweeper"
+    },
+    "featured": false,
+    "tags": [
+      "games",
+      "fun",
+      "entertainment",
+      "minesweeper"
+    ],
+    "releaseDate": "2024-12-28",
+    "support": "https://github.com/zos-apps/minesweeper/issues",
+    "changelog": "https://github.com/zos-apps/minesweeper/releases"
   },
   "scripts": {
     "build": "tsup",
