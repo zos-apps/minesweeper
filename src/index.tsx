@@ -1,8 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-
-interface MinesweeperProps {
-  onClose: () => void;
-}
+import { useState, useCallback, useEffect } from 'react';
+import type { AppProps } from '@zos-apps/config';
+import { useTimer, useHighScore } from '@zos-apps/config';
 
 interface Cell {
   isMine: boolean;
@@ -17,15 +15,41 @@ const DIFFICULTIES = {
   hard: { rows: 16, cols: 30, mines: 99 },
 };
 
-const Minesweeper: React.FC<MinesweeperProps> = ({ onClose }) => {
-  const [difficulty, setDifficulty] = useState<keyof typeof DIFFICULTIES>('easy');
+type Difficulty = keyof typeof DIFFICULTIES;
+
+const Minesweeper: React.FC<AppProps> = ({ onClose: _onClose }) => {
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [grid, setGrid] = useState<Cell[][]>([]);
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
   const [flagCount, setFlagCount] = useState(0);
-  const [time, setTime] = useState(0);
   const [started, setStarted] = useState(false);
 
   const { rows, cols, mines } = DIFFICULTIES[difficulty];
+  
+  // Timer using shared hook
+  const { elapsed: time, start: startTimer, stop: stopTimer, reset: resetTimer } = useTimer(false);
+  
+  // Best times per difficulty (lower is better)
+  const { highScore: bestTimeEasy, updateHighScore: updateBestEasy } = useHighScore('minesweeper-easy', 999);
+  const { highScore: bestTimeMedium, updateHighScore: updateBestMedium } = useHighScore('minesweeper-medium', 999);
+  const { highScore: bestTimeHard, updateHighScore: updateBestHard } = useHighScore('minesweeper-hard', 999);
+  
+  const bestTimes: Record<Difficulty, number> = {
+    easy: bestTimeEasy,
+    medium: bestTimeMedium,
+    hard: bestTimeHard,
+  };
+  
+  const updateBestTime = (diff: Difficulty, newTime: number) => {
+    const currentBest = bestTimes[diff];
+    if (newTime < currentBest) {
+      if (diff === 'easy') updateBestEasy(newTime);
+      else if (diff === 'medium') updateBestMedium(newTime);
+      else updateBestHard(newTime);
+      return true;
+    }
+    return false;
+  };
 
   const initGame = useCallback(() => {
     const newGrid: Cell[][] = Array(rows).fill(null).map(() =>
@@ -69,23 +93,27 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onClose }) => {
     setGrid(newGrid);
     setGameState('playing');
     setFlagCount(0);
-    setTime(0);
     setStarted(false);
-  }, [rows, cols, mines]);
+    resetTimer();
+  }, [rows, cols, mines, resetTimer]);
 
   useEffect(() => {
     initGame();
   }, [initGame]);
 
+  // Stop timer when game ends
   useEffect(() => {
-    if (!started || gameState !== 'playing') return;
-    const timer = setInterval(() => setTime(t => t + 1), 1000);
-    return () => clearInterval(timer);
-  }, [started, gameState]);
+    if (gameState !== 'playing' && started) {
+      stopTimer();
+    }
+  }, [gameState, started, stopTimer]);
 
   const reveal = useCallback((r: number, c: number) => {
     if (gameState !== 'playing') return;
-    if (!started) setStarted(true);
+    if (!started) {
+      setStarted(true);
+      startTimer();
+    }
 
     const cell = grid[r]?.[c];
     if (!cell || cell.isRevealed || cell.isFlagged) return;
@@ -125,7 +153,7 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onClose }) => {
     if (unrevealed === mines) {
       setGameState('won');
     }
-  }, [grid, gameState, started, rows, cols, mines]);
+  }, [grid, gameState, started, rows, cols, mines, startTimer]);
 
   const toggleFlag = useCallback((r: number, c: number, e: React.MouseEvent) => {
     e.preventDefault();
@@ -153,6 +181,8 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onClose }) => {
     return colors[n] || '';
   };
 
+  const isNewBest = gameState === 'won' && time < bestTimes[difficulty];
+
   return (
     <div className="h-full flex flex-col bg-gray-200 p-4">
       {/* Header */}
@@ -170,19 +200,22 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onClose }) => {
           {gameState === 'won' ? '😎' : gameState === 'lost' ? '😵' : '🙂'}
         </button>
         
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-end gap-1">
           <span className="font-mono text-xl bg-black text-red-500 px-2 py-1 rounded">
             {String(Math.min(time, 999)).padStart(3, '0')}
           </span>
+          {bestTimes[difficulty] < 999 && (
+            <span className="text-xs text-gray-600">Best: {bestTimes[difficulty]}s</span>
+          )}
         </div>
       </div>
 
       {/* Difficulty selector */}
       <div className="flex gap-2 mb-4 justify-center">
-        {Object.keys(DIFFICULTIES).map(d => (
+        {(Object.keys(DIFFICULTIES) as Difficulty[]).map(d => (
           <button
             key={d}
-            onClick={() => setDifficulty(d as keyof typeof DIFFICULTIES)}
+            onClick={() => setDifficulty(d)}
             className={`px-3 py-1 rounded capitalize ${difficulty === d ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}
           >
             {d}
@@ -220,8 +253,15 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onClose }) => {
       </div>
 
       {gameState !== 'playing' && (
-        <div className={`mt-4 text-center text-xl font-bold ${gameState === 'won' ? 'text-green-600' : 'text-red-600'}`}>
-          {gameState === 'won' ? '🎉 You Won!' : '💥 Game Over!'}
+        <div className={`mt-4 text-center ${gameState === 'won' ? 'text-green-600' : 'text-red-600'}`}>
+          <div className="text-xl font-bold">
+            {gameState === 'won' ? '🎉 You Won!' : '💥 Game Over!'}
+          </div>
+          {gameState === 'won' && (
+            <div className="text-sm mt-1">
+              Time: {time}s {isNewBest && updateBestTime(difficulty, time) && '🏆 New Record!'}
+            </div>
+          )}
         </div>
       )}
     </div>
